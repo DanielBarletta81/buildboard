@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* New England Workshop Color Palette */
+  --paper: #F5F1E8;        /* Warm cream - main background */
+  --ink: #1A2E1F;          /* Deep green-black - primary text */
+  --harbor: #758A83;       /* Muted green-gray - secondary elements */
+  --cedar: #A67C52;        /* Warm wood brown - accents */
+  --slate: #5A6B7D;        /* Coastal blue-gray - interactive elements */
+  --brass: #B8956A;        /* Muted gold - highlights */
+  --fog: #E8E4DC;          /* Light neutral - cards */
+  --shadow: #2D3E32;       /* Darker green - borders */
+  
+  /* Semantic mappings */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--fog);
+  --card-border: var(--harbor);
+  --accent: var(--cedar);
+  --interactive: var(--slate);
+  --highlight: var(--brass);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-accent: var(--accent);
+  --color-interactive: var(--interactive);
+  --color-highlight: var(--highlight);
+  
+  /* Custom colors */
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-harbor: var(--harbor);
+  --color-cedar: var(--cedar);
+  --color-slate: var(--slate);
+  --color-brass: var(--brass);
+  --color-fog: var(--fog);
+  --color-shadow: var(--shadow);
+  
+  /* Severity colors */
+  --color-caution: #E8A87C;
+  --color-warning: #D97E4A;
+  --color-danger: #C14C3D;
+  
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  line-height: 1.6;
 }

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Masonry from 'react-masonry-css';
-import { Board, Card } from '@/lib/types';
+import { Board, Card, CardState } from '@/lib/types';
 import MaterialCard from './cards/MaterialCard';
 import CutCard from './cards/CutCard';
 import ToolCard from './cards/ToolCard';
@@ -13,9 +13,22 @@ import ArchitectureCard from './cards/ArchitectureCard';
 interface MasonryBoardProps {
   board: Board;
   searchQuery?: string;
+  statusFilter?: 'all' | 'completed' | 'pending';
+  getCardState: (cardId: string) => CardState;
+  onToggleComplete: (cardId: string) => void;
+  onToggleShoppingList: (cardId: string) => void;
+  onUpdateActualCost: (cardId: string, cost: number) => void;
 }
 
-export default function MasonryBoard({ board, searchQuery }: MasonryBoardProps) {
+export default function MasonryBoard({ 
+  board, 
+  searchQuery,
+  statusFilter = 'all',
+  getCardState,
+  onToggleComplete,
+  onToggleShoppingList,
+  onUpdateActualCost,
+}: MasonryBoardProps) {
   const breakpointColumns = {
     default: 4,
     1536: 3,
@@ -23,27 +36,69 @@ export default function MasonryBoard({ board, searchQuery }: MasonryBoardProps) 
     768: 1
   };
 
-  // Filter cards based on search query
-  const filteredCards = searchQuery 
-    ? board.cards.filter(card => {
-        const searchLower = searchQuery.toLowerCase();
-        const cardData = JSON.stringify(card).toLowerCase();
-        return cardData.includes(searchLower);
-      })
-    : board.cards;
+  // Filter cards based on search query and status
+  const filteredCards = board.cards.filter(card => {
+    // Search filter
+    if (searchQuery) {
+      const searchLower = searchQuery.toLowerCase();
+      const cardData = JSON.stringify(card).toLowerCase();
+      if (!cardData.includes(searchLower)) return false;
+    }
+
+    // Status filter
+    if (statusFilter !== 'all') {
+      const cardState = getCardState(card.id);
+      if (statusFilter === 'completed' && !cardState.completed) return false;
+      if (statusFilter === 'pending' && cardState.completed) return false;
+    }
+
+    return true;
+  });
 
   const renderCard = (card: Card) => {
+    const cardState = getCardState(card.id);
+
     switch (card.type) {
       case 'material':
-        return <MaterialCard key={card.id} material={card as any} />;
+        return (
+          <MaterialCard 
+            key={card.id} 
+            material={card as any} 
+            cardState={cardState}
+            onToggleComplete={onToggleComplete}
+            onToggleShoppingList={onToggleShoppingList}
+            onUpdateActualCost={onUpdateActualCost}
+          />
+        );
       case 'cut':
-        return <CutCard key={card.id} cut={card as any} />;
+        return (
+          <CutCard 
+            key={card.id} 
+            cut={card as any} 
+            cardState={cardState}
+            onToggleComplete={onToggleComplete}
+          />
+        );
       case 'tool':
-        return <ToolCard key={card.id} tool={card as any} />;
+        return (
+          <ToolCard 
+            key={card.id} 
+            tool={card as any} 
+            cardState={cardState}
+            onToggleComplete={onToggleComplete}
+          />
+        );
       case 'safety':
         return <SafetyCard key={card.id} safetyNote={card as any} />;
       case 'step':
-        return <StepCard key={card.id} step={card as any} />;
+        return (
+          <StepCard 
+            key={card.id} 
+            step={card as any} 
+            cardState={cardState}
+            onToggleComplete={onToggleComplete}
+          />
+        );
       case 'architecture':
         return <ArchitectureCard key={card.id} note={card as any} />;
       default:

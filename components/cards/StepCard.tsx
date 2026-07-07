@@ -1,11 +1,13 @@
 import React from 'react';
-import { InstructionStep } from '@/lib/types';
+import { InstructionStep, CardState } from '@/lib/types';
 
 interface StepCardProps {
   step: InstructionStep;
+  cardState: CardState;
+  onToggleComplete: (cardId: string) => void;
 }
 
-export default function StepCard({ step }: StepCardProps) {
+export default function StepCard({ step, cardState, onToggleComplete }: StepCardProps) {
   const difficultyColors = {
     easy: 'text-green-700 bg-green-50',
     medium: 'text-yellow-700 bg-yellow-50',
@@ -13,13 +15,27 @@ export default function StepCard({ step }: StepCardProps) {
   };
 
   return (
-    <div className="bg-fog border-2 border-brass/30 rounded-lg p-5 mb-6 hover:shadow-xl transition-shadow">
+    <div className={`bg-fog border-2 rounded-lg p-5 mb-6 hover:shadow-xl transition-all ${
+      cardState.completed ? 'border-green-500' : 'border-brass/30'
+    }`}>
       <div className="flex items-start gap-3 mb-3">
-        <div className="flex-shrink-0 w-10 h-10 bg-brass text-white rounded-full flex items-center justify-center font-bold text-lg">
-          {step.stepNumber}
-        </div>
+        {/* Completion Checkbox */}
+        <button
+          onClick={() => onToggleComplete(step.id)}
+          className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg transition-all ${
+            cardState.completed
+              ? 'bg-green-500 text-white'
+              : 'bg-brass text-white hover:bg-brass/80'
+          }`}
+          title={cardState.completed ? 'Mark as incomplete' : 'Mark as complete'}
+        >
+          {cardState.completed ? '✓' : step.stepNumber}
+        </button>
+        
         <div className="flex-1">
-          <h3 className="font-bold text-ink text-xl leading-tight mb-1">
+          <h3 className={`font-bold text-ink text-xl leading-tight mb-1 ${
+            cardState.completed ? 'line-through opacity-60' : ''
+          }`}>
             {step.title}
           </h3>
           <div className="flex gap-2 flex-wrap">
@@ -31,6 +47,11 @@ export default function StepCard({ step }: StepCardProps) {
             {step.difficulty && (
               <span className={`text-xs px-2 py-1 rounded font-medium ${difficultyColors[step.difficulty]}`}>
                 {step.difficulty}
+              </span>
+            )}
+            {cardState.completed && cardState.completedAt && (
+              <span className="text-xs px-2 py-1 bg-green-50 text-green-700 rounded">
+                ✓ {new Date(cardState.completedAt).toLocaleDateString()}
               </span>
             )}
           </div>
@@ -103,3 +124,4 @@ export default function StepCard({ step }: StepCardProps) {
     </div>
   );
 }
+  

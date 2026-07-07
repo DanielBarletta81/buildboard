@@ -174,6 +174,27 @@ export interface Project {
   status?: 'planning' | 'in-progress' | 'completed';
 }
 
+// Completion tracking
+export interface CardState {
+  cardId: string;
+  completed: boolean;
+  completedAt?: Date;
+  notes?: string;
+  priority?: 'low' | 'medium' | 'high';
+  inShoppingList?: boolean;
+  actualCost?: number;
+  actualTime?: string;
+}
+
+export interface ProjectState {
+  projectId: string;
+  cardStates: Record<string, CardState>; // cardId -> CardState
+  shoppingList: string[]; // cardIds
+  totalSpent: number;
+  startedAt?: Date;
+  completedAt?: Date;
+}
+
 // View state types
 export interface ProjectViewState {
   activeBoard: string | null;
@@ -182,6 +203,8 @@ export interface ProjectViewState {
     tags?: string[];
     difficulty?: string[];
     category?: string[];
+    status?: 'all' | 'completed' | 'pending' | 'in-progress';
   };
   searchQuery?: string;
+  showShoppingList?: boolean;
 }

@@ -108,25 +108,45 @@ Six specialized boards organize every aspect of a build:
 - Step-by-step instructions with checkpoints
 - Architecture & design specifications
 
-### 2. **Pinterest-Style Masonry Layout**
+### 2. **Interactive Progress Tracking** ✨ NEW
+- **Completion Checkboxes:** Mark materials, cuts, tools, and steps as complete
+- **Progress Dashboard:** Real-time visualization of overall and per-board progress
+- **Budget Tracking:** Track actual costs vs. estimates with automatic budget calculations
+- **Status Filters:** View all cards, pending items, or completed tasks
+- **Local Storage:** Your progress persists across sessions automatically
+- **Visual Indicators:** Green borders and strikethrough styling for completed items
+- **Completion Celebration:** Get a celebration message when you finish your project!
+
+### 3. **Smart Shopping List** ✨ NEW
+- **Quick Add:** One-click to add materials to your shopping list
+- **Organized by Supplier:** Materials grouped by Home Depot, Lowes, etc.
+- **Cost Summary:** See total estimated cost for shopping list
+- **Copy to Clipboard:** Export your list with one click
+- **Direct Links:** Access product pages from shopping list
+- **Badge Counter:** Always know how many items are in your list
+
+### 4. **Cost Management** ✨ NEW
+- **Actual Cost Tracking:** Track what you actually spend on each material
+- **Budget Alerts:** Get warnings when you're over budget
+- **Running Total:** See your total spent in real-time
+- **Cost Comparison:** Compare estimated vs. actual costs per item
+
+### 5. **Pinterest-Style Masonry Layout**
 Responsive grid automatically arranges cards by content height. Desktop shows 4 columns, tablet 2, mobile stacks single column.
 
-### 3. **Intelligent Card Types**
+### 6. **Intelligent Card Types**
 Each card type has custom styling and data fields:
-- **Materials:** Dimensions, cost, supplier, related cuts
-- **Cuts:** Angle cuts, difficulty, tool requirements
-- **Tools:** Safety ratings, required vs. optional, alternatives
+- **Materials:** Dimensions, cost, supplier, related cuts, shopping list actions
+- **Cuts:** Angle cuts, difficulty, tool requirements, completion tracking
+- **Tools:** Safety ratings, required vs. optional, alternatives, inventory checking
 - **Safety:** Severity-based color coding (caution/warning/danger)
-- **Steps:** Sequential numbering, time estimates, pro tips, checkpoints
+- **Steps:** Sequential numbering, time estimates, pro tips, checkpoints, completion tracking
 - **Architecture:** Design specifications, regulations, dimensions
 
-### 4. **Search & Filter**
-Real-time search across all cards in active board.
+### 7. **Search & Filter**
+Real-time search across all cards in active board, with status filtering for completed/pending items.
 
-### 5. **Cost Tracking**
-Materials include pricing; project header shows estimated total cost.
-
-### 6. **Difficulty & Time Estimates**
+### 8. **Difficulty & Time Estimates**
 Projects, steps, and cuts labeled with difficulty ratings and time estimates.
 
 ## 📊 Data Model
@@ -169,7 +189,13 @@ Card Types:
 
 ## 🔮 Future Enhancements
 
-**Phase 2 Features (Not Yet Implemented):**
+**Phase 2 Features (In Progress):**
+- [x] Completion tracking with checkboxes
+- [x] Progress dashboard with visual statistics
+- [x] Shopping list with supplier grouping
+- [x] Actual cost tracking vs. estimates
+- [x] Status filtering (all/pending/completed)
+- [x] Local storage persistence
 - [ ] User accounts & project library
 - [ ] Project templates marketplace
 - [ ] Shopping cart integration (Home Depot/Lowes APIs)

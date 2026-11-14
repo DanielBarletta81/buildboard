@@ -1,251 +1,161 @@
-# BuildBoard
-
-A visual construction planning app that bridges the gap between Pinterest inspiration and execution. Built for DIY builders who want to organize materials, cuts, tools, safety notes, and step-by-step instructions in a beautiful, Pinterest-inspired interface.
-
-## 🎯 Product Vision
-
-BuildBoard transforms the way DIY builders plan projects. Instead of scattered notes, spreadsheets, and bookmarks, everything lives in visual boards that make complex builds feel manageable and exciting.
-
-**The Problem:** DIY builders save inspiring photos on Pinterest, but struggle to translate those dreams into actionable plans. Planning a shed or deck requires tracking dozens of materials, hundreds of cuts, safety considerations, and sequential steps—all while staying on budget.
-
-**The Solution:** BuildBoard organizes construction projects into visual boards (Materials, Cuts, Tools, Safety, Instructions, Architecture) with Pinterest-style cards that connect inspiration to execution.
-
-## 🏗️ Demo Project: 10x10 Gambrel Shed Office
-
-The current demo showcases a complete build plan for a backyard office:
-
-- **📦 Materials Board:** 18 materials with specifications, quantities, costs, suppliers
-- **📏 Cuts Board:** 40+ cuts with dimensions, angles, difficulty ratings, tool requirements
-- **🔨 Tools Board:** 12 tools categorized by type with safety ratings and alternatives
-- **⚠️ Safety Board:** 8 critical safety notes organized by severity
-- **📋 Instructions Board:** 8 sequential steps with time estimates, tips, checkpoints
-- **📐 Architecture Board:** Design specs, dimensions, and regulatory information
-
-**Total Project Cost:** ~$3,500  
-**Estimated Time:** 4-6 weekends  
-**Difficulty:** Intermediate
-
-## 🎨 Design System: New England Workshop
-
-BuildBoard uses a warm, craftsman-inspired palette that evokes workshops and architectural field notebooks:
-
-- **Paper** (`#F5F1E8`): Warm cream background
-- **Ink** (`#1A2E1F`): Deep green-black for primary text
-- **Harbor** (`#758A83`): Muted green-gray for secondary elements
-- **Cedar** (`#A67C52`): Warm wood brown for accents
-- **Slate** (`#5A6B7D`): Coastal blue-gray for interactive elements
-- **Brass** (`#B8956A`): Muted gold for highlights
-- **Fog** (`#E8E4DC`): Light neutral for cards
-
-Visual aesthetic: Pinterest meets architectural notebook.
-
-## 🛠️ Tech Stack
-
-- **Framework:** Next.js 16 with App Router
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS v4
-- **Layout:** react-masonry-css (Pinterest-style responsive grid)
-- **Data:** Mock data (demo project)
-- **Deployment:** Ready for Vercel
-
-## 📂 Project Structure
-
-```
-buildboard/
-├── app/
-│   ├── globals.css          # Design system & Tailwind config
-│   ├── layout.tsx
-│   └── page.tsx              # Main entry point
-├── components/
-│   ├── MasonryBoard.tsx      # Pinterest-style grid layout
-│   ├── ProjectWorkspace.tsx  # Board navigation & search
-│   └── cards/
-│       ├── MaterialCard.tsx
-│       ├── CutCard.tsx
-│       ├── ToolCard.tsx
-│       ├── SafetyCard.tsx
-│       ├── StepCard.tsx
-│       └── ArchitectureCard.tsx
-├── data/
-│   └── demo-project.ts       # 10x10 Gambrel Shed data
-├── lib/
-│   └── types.ts              # TypeScript definitions
-└── package.json
+```text
+BuildBoard — From Inspiration to a Workable Plan
 ```
 
-## 🚀 Getting Started
+**A visual construction-planning prototype that turns a DIY project into organized materials, cuts, tools, safety guidance, tasks and cost tracking.**
 
-### Installation
+[Repository](https://github.com/DanielBarletta81/buildboard) · [Feature walkthrough](FEATURE_SHOWCASE.md) · [Implementation notes](IMPLEMENTATION_SUMMARY.md)
+
+> **Status:** Interactive, single-project portfolio prototype using demonstration data and browser-local persistence. It is **not** a certified construction plan, purchasing service, multi-user platform, or source of authoritative engineering/code compliance advice.
+
+## The problem
+
+DIY builders often begin with a photo or a saved idea. Turning that idea into a real project requires a different set of information: dimensions, materials, cuts, tool choices, safe sequencing, budget, and a record of what has actually been done.
+
+BuildBoard investigates a practical product question:
+
+> **Can a visual, approachable interface retain the inspiration of an idea board while giving the builder a usable sequence of work?**
+
+I developed the concept from firsthand experience in carpentry and construction. The interface reflects how a builder moves between the big picture and individual details: first understand the structure, then buy, cut, assemble, check and revise.
+
+## Explore the demo
+
+The supplied demonstration project is a **10 × 10 ft gambrel-roof shed office**. Its materials, quantities, cut lists, prices and times are **example planning data**, not field-verified instructions or current supplier quotes.
+
+A typical workflow:
+
+1. Open the project and choose a board: **Materials, Cuts, Tools, Safety, Instructions, or Architecture**.
+2. Search and filter the relevant cards, inspecting details rather than scrolling through one enormous checklist.
+3. Add materials to the shopping list and review them grouped by supplier.
+4. Mark items complete as work progresses; watch the dashboard and board indicators update.
+5. Record actual material costs and compare spending against the project estimate.
+6. Return later: project progress is persisted in the browser using `localStorage`.
+
+### Project experience
+
+| Feature                   | Implementation in repository                         | User benefit                                                    |
+| ------------------------- | ---------------------------------------------------- | --------------------------------------------------------------- |
+| Six visual boards         | Typed card models and reusable React card components | Separates different kinds of construction information           |
+| Masonry-style layout      | `MasonryBoard.tsx` and `react-masonry-css`           | Makes varied card content easier to browse                      |
+| Completion tracking       | `useProjectState` hook and interactive cards         | Shows which tasks or purchases remain                           |
+| Progress dashboard        | `ProgressDashboard.tsx`                              | Summarizes status across boards                                 |
+| Shopping list             | `ShoppingList.tsx`                                   | Gathers selected materials and organizes by supplier            |
+| Actual cost tracking      | Per-card state and project totals                    | Makes estimated-versus-recorded spending visible                |
+| Search and status filters | Workspace controls                                   | Reduces visual noise during a particular phase of work          |
+| Browser persistence       | `localStorage`                                       | Restores progress on the same browser/device without an account |
+
+These features are described in the repository's implementation notes. This README does not claim an independent browser acceptance test or accessibility audit.
+
+## Information architecture and state
+
+```text
+Demo project
+   |
+   +-- Project metadata and budget
+   +-- Boards
+   |     +-- Materials  +-- Cuts  +-- Tools
+   |     +-- Safety     +-- Instructions  +-- Architecture
+   |                    |
+   |                    +--> typed cards / related information
+   |
+   +-- Local project state
+         +-- completion and timestamps
+         +-- shopping selections
+         +-- actual material cost
+         +-- progress and budget summaries
+```
+
+The **project data** and **user progress** are separate. The demo specification is defined in [`data/demo-project.ts`](data/demo-project.ts); mutable per-user state is managed by [`lib/hooks/useProjectState.ts`](lib/hooks/useProjectState.ts). This makes it possible to extend card types without embedding user progress directly into the demonstration dataset.
+
+### Product decisions and trade-offs
+
+**Visual boards instead of one master list.** A builder needs different information while estimating materials than while using tools or following assembly steps. Separate boards keep each working context readable.
+
+**Non-destructive completion.** A checked-off card remains visible, which matters when a builder needs to recheck a dimension or purchase.
+
+**Local-first persistence.** `localStorage` keeps the prototype lightweight and quick to demonstrate. The trade-offs are explicit: no account synchronization, shared team workspace, or durable server-side backup.
+
+**Typed card models.** Materials, cuts, tools, safety notes and instructions have different fields. A discriminated card model makes those differences explicit and gives the UI room to grow.
+
+**Separate estimated and actual costs.** Estimates are planning assumptions; recorded costs reflect what a user enters. The application should not present either as live supplier pricing.
+
+## Stack
+
+- Next.js 16 (App Router), React 19, TypeScript
+- Tailwind CSS 4 and custom design tokens
+- `react-masonry-css` for responsive card arrangements
+- React hooks and browser `localStorage` for prototype state
+- Local, typed demonstration data; no application database or remote purchasing API
+
+See [`package.json`](package.json) for precise versions and commands.
+
+## Run locally
 
 ```bash
-cd ~/Desktop/buildboard
-npm install
-```
-
-### Development
-
-```bash
+git clone https://github.com/DanielBarletta81/buildboard.git
+cd buildboard
+npm ci
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### Build for Production
+Open [http://localhost:3000](http://localhost:3000).
 
 ```bash
+npm run lint
 npm run build
 npm start
 ```
 
-## 🎯 Key Features
+These commands come from the published scripts. Their current passing status was **not independently verified** in this README review. There is no automated `test` script declared in the inspected root package manifest.
 
-### 1. **Visual Board System**
-Six specialized boards organize every aspect of a build:
-- Materials with cost tracking
-- Cuts with angle specifications
-- Tool requirements with alternatives
-- Safety notes by severity
-- Step-by-step instructions with checkpoints
-- Architecture & design specifications
+## Code tour
 
-### 2. **Interactive Progress Tracking** ✨ NEW
-- **Completion Checkboxes:** Mark materials, cuts, tools, and steps as complete
-- **Progress Dashboard:** Real-time visualization of overall and per-board progress
-- **Budget Tracking:** Track actual costs vs. estimates with automatic budget calculations
-- **Status Filters:** View all cards, pending items, or completed tasks
-- **Local Storage:** Your progress persists across sessions automatically
-- **Visual Indicators:** Green borders and strikethrough styling for completed items
-- **Completion Celebration:** Get a celebration message when you finish your project!
+| File or folder                                                         | Responsibility                                       |
+| ---------------------------------------------------------------------- | ---------------------------------------------------- |
+| [`app/page.tsx`](app/page.tsx)                                         | Application entry point                              |
+| [`components/ProjectWorkspace.tsx`](components/ProjectWorkspace.tsx)   | Board selection, filtering and interactive workspace |
+| [`components/MasonryBoard.tsx`](components/MasonryBoard.tsx)           | Responsive card rendering                            |
+| [`components/cards`](components/cards)                                 | Card implementations for different work domains      |
+| [`components/ProgressDashboard.tsx`](components/ProgressDashboard.tsx) | Progress and budget summaries                        |
+| [`components/ShoppingList.tsx`](components/ShoppingList.tsx)           | Shopping selections and supplier grouping            |
+| [`lib/hooks/useProjectState.ts`](lib/hooks/useProjectState.ts)         | Browser-persisted state operations                   |
+| [`lib/types.ts`](lib/types.ts)                                         | TypeScript data contracts                            |
+| [`data/demo-project.ts`](data/demo-project.ts)                         | Example shed-office project                          |
 
-### 3. **Smart Shopping List** ✨ NEW
-- **Quick Add:** One-click to add materials to your shopping list
-- **Organized by Supplier:** Materials grouped by Home Depot, Lowes, etc.
-- **Cost Summary:** See total estimated cost for shopping list
-- **Copy to Clipboard:** Export your list with one click
-- **Direct Links:** Access product pages from shopping list
-- **Badge Counter:** Always know how many items are in your list
+For more detailed usage and UI states, see [Interactive Features](INTERACTIVE_FEATURES.md), [Feature Showcase](FEATURE_SHOWCASE.md), and [Implementation Summary](IMPLEMENTATION_SUMMARY.md).
 
-### 4. **Cost Management** ✨ NEW
-- **Actual Cost Tracking:** Track what you actually spend on each material
-- **Budget Alerts:** Get warnings when you're over budget
-- **Running Total:** See your total spent in real-time
-- **Cost Comparison:** Compare estimated vs. actual costs per item
+## Design language
 
-### 5. **Pinterest-Style Masonry Layout**
-Responsive grid automatically arranges cards by content height. Desktop shows 4 columns, tablet 2, mobile stacks single column.
+**New England Workshop** uses warm paper tones, dark green ink, slate, cedar and brass accents—closer to a field notebook and workshop plan than a conventional project-management spreadsheet. Card hierarchy is designed to reveal important quantities and next actions first, with further details available inside each board.
 
-### 6. **Intelligent Card Types**
-Each card type has custom styling and data fields:
-- **Materials:** Dimensions, cost, supplier, related cuts, shopping list actions
-- **Cuts:** Angle cuts, difficulty, tool requirements, completion tracking
-- **Tools:** Safety ratings, required vs. optional, alternatives, inventory checking
-- **Safety:** Severity-based color coding (caution/warning/danger)
-- **Steps:** Sequential numbering, time estimates, pro tips, checkpoints, completion tracking
-- **Architecture:** Design specifications, regulations, dimensions
+The visual style supports the goal, but a restrained interface is only successful if it remains readable for keyboard, mobile and assistive-technology users. Those experiences require explicit testing.
 
-### 7. **Search & Filter**
-Real-time search across all cards in active board, with status filtering for completed/pending items.
+## What this demonstrates
 
-### 8. **Difficulty & Time Estimates**
-Projects, steps, and cuts labeled with difficulty ratings and time estimates.
+BuildBoard is a focused example of **domain-informed UI and product development**. It turns construction knowledge into a navigable data model and an interactive application, while keeping prototype assumptions visible. The transferable engineering concerns—data modeling, progressive disclosure, state management, cost feedback and usable workflows—also matter in research dashboards, field-operations software and scientific outreach tools.
 
-## 📊 Data Model
+## Limitations and roadmap
 
-The type system supports rich, interconnected project data:
+### Current limitations
 
-```typescript
-Project → Boards → Cards
+- Single demonstration project; no user account, shared project library or cloud persistence.
+- Demonstration prices and quantities; no verified supplier inventory, quotes or permitting data.
+- No confirmed cross-browser, mobile-device or assistive-technology test report accompanying this README.
+- No independent structural-design review. **Do not build from demo dimensions without qualified review and local code checks.**
+- No automated unit or end-to-end test script in the inspected package manifest.
 
-Card Types:
-- Material: lumber, fasteners, hardware, roofing
-- Cut: dimensions, angles, tools needed, difficulty
-- Tool: power/hand/measuring, safety rating, alternatives
-- SafetyNote: severity levels, related tools/steps
-- InstructionStep: sequential, materials/tools/safety refs
-- ArchitectureNote: dimensions, design, regulations
-```
+### Potential next milestones
 
-## 🎯 Product Positioning
+- Import or create additional projects without editing source files.
+- Introduce project-data validation and tests for progress and budget calculations.
+- Add printable cut lists and material summaries with clear assumption labels.
+- Test keyboard use, focus order, touch targets and screen-reader announcements.
+- Explore optional collaboration and cloud synchronization after the single-user workflow is stable.
 
-### For Portfolio/Interview Context
+## Related work
 
-**Product Thinking Demonstrated:**
-1. **Problem-Solution Clarity:** Identified real pain point (Pinterest inspiration ↔️ execution gap)
-2. **Information Architecture:** Six-board system reflects builder mental model
-3. **Visual Discovery:** Masonry layout makes scanning hundreds of items manageable
-4. **Progressive Disclosure:** Cards show critical info at a glance, full details on demand
-5. **User Safety:** Safety notes prominently displayed with severity-based visual hierarchy
+- [Evergreen Documentation](https://github.com/DanielBarletta81/evergreen-docs) — spatial property stewardship and long-horizon landscape planning
+- [Microsat Atlas](https://github.com/DanielBarletta81/microsat-atlas) — custom scientific visualization and map interaction
+- [NOAA Signals Lab](https://github.com/DanielBarletta81/noaa-signals-lab) — validated environmental data and clear interpretation boundaries
 
-**Design Decisions:**
-- New England workshop aesthetic aligns with target user (serious DIY builders)
-- Card-based UI familiar from Pinterest reduces learning curve
-- Relationship tracking (materials → cuts, steps → tools) anticipates future features
-
-**Technical Execution:**
-- TypeScript provides type safety for complex data relationships
-- Component architecture enables future card types (shopping, progress tracking)
-- Mock data structure designed for easy backend integration
-- Responsive design from mobile-first approach
-
-## 🔮 Future Enhancements
-
-**Phase 2 Features (In Progress):**
-- [x] Completion tracking with checkboxes
-- [x] Progress dashboard with visual statistics
-- [x] Shopping list with supplier grouping
-- [x] Actual cost tracking vs. estimates
-- [x] Status filtering (all/pending/completed)
-- [x] Local storage persistence
-- [ ] User accounts & project library
-- [ ] Project templates marketplace
-- [ ] Shopping cart integration (Home Depot/Lowes APIs)
-- [ ] Progress tracking (mark steps complete, upload photos)
-- [ ] Export to PDF cut list
-- [ ] Material cost calculator with regional pricing
-- [ ] Community sharing & remixing
-- [ ] AR visualization for cuts/assembly
-- [ ] Integration with measurement apps
-
-**Phase 3 (Advanced):**
-- [ ] AI-powered project generation from photos
-- [ ] Supplier inventory checking
-- [ ] Time-lapse build documentation
-- [ ] Collaboration features for group builds
-- [ ] Contractor marketplace
-
-## 📝 Development Notes
-
-### Adding New Card Types
-1. Define type in `lib/types.ts`
-2. Create card component in `components/cards/`
-3. Add rendering logic to `MasonryBoard.tsx`
-4. Update board configuration in project data
-
-### Customizing Design System
-Edit CSS variables in `app/globals.css`:
-```css
-:root {
-  --paper: #F5F1E8;
-  --ink: #1A2E1F;
-  /* ... */
-}
-```
-
-### Creating New Projects
-Follow structure in `data/demo-project.ts`:
-1. Define materials, cuts, tools, safety notes, steps
-2. Organize into boards
-3. Create project metadata
-
-## 👤 Author
-
-**Daniel Barletta**  
-Product-minded builder | Author | Software Engineer  
-
-Building tools that help people create.
-
----
-
-**License:** MIT  
-**Status:** Demo/Portfolio Project  
-**Last Updated:** July 7, 2026
+**Created by Daniel C. Barletta** — construction professional, scientific researcher and software developer interested in turning specialist knowledge into approachable tools.
